@@ -74,6 +74,7 @@ int main(void)
     float trashTimer = 0.0f;
 
     Player chara;
+    chara.startInputThread();
 
     std::vector<Puddle> puddles;
     std::vector<Trash> trashes;

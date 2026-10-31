@@ -33,6 +33,8 @@ class Player{
         Sound hitSound=LoadSound("assets/se_power_up8.mp3");
 
     public:
+        void startInputThread();
+
         int getHP();
         float getX();
         float getY();

@@ -1,14 +1,35 @@
 #include "Player.h"
 #include "raylib.h"
 #include <iostream>
+#include <atomic>
+#include <thread>
+
+// 最新の手の状態
+std::atomic<char> leftHand{'x'};
+std::atomic<char> rightHand{'x'};
+
+// 標準入力を受け取る専用スレッド
+void inputThread()
+{
+    char left, right;
+
+    while (std::cin >> left >> right)
+    {
+        leftHand.store(left);
+        rightHand.store(right);
+    }
+}
+
+void Player::startInputThread()
+{
+    static std::thread inputWorker(inputThread);
+    inputWorker.detach();
+}
 
 void Player::update(float dt)
 {
-    char left_hand, right_hand;
-    std::cin >> left_hand >> right_hand;
-
-    bool isUpDown = IsKeyDown(KEY_UP) || (left_hand == 'o');
-    bool isSpaceDown = IsKeyPressed(KEY_SPACE) || (right_hand == 'o');
+    bool isUpDown = IsKeyDown(KEY_UP) || (leftHand.load() == 'o');
+    bool isSpaceDown = IsKeyPressed(KEY_SPACE) || (rightHand.load() == 'o');
 
     if(status != 0)
     {
